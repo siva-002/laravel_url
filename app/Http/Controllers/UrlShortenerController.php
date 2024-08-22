@@ -11,10 +11,12 @@ use App\Models\url;
 class UrlShortenerController extends Controller
 {
     //
+    public $frontendUrl="https://587f-2401-4900-1ce3-c6fc-1405-ac74-eb9a-5aec.ngrok-free.app/";
 
     public function index()
     {
-        return json_encode(["status" => 200, "messsage" => "backend working"]);
+        return redirect($this->frontendUrl);
+        // return json_encode(["status" => 200, "messsage" => "backend working"]);
     }
 
     public function getCsrf()
@@ -36,7 +38,7 @@ class UrlShortenerController extends Controller
                 return json_encode(["status" => 500, "message" => $e->getMessage()]);
             }
         }
-        return json_encode(["status" => 200, "message" => "Not a Valid Url", "data" => $request->url_value]);
+        return json_encode(["status" => 400, "message" => "Not a Valid Url"]);
     }
 
     public function redirectUrl($url)
@@ -62,7 +64,7 @@ class UrlShortenerController extends Controller
                 $findUrl->delete();
                 return json_encode(["status" => 200, "message" => "Url removed"]);
             } else {
-                return json_encode(["status" => 404, "message" => "Url Not found"]);
+                return json_encode(["status" => 400, "message" => "Url Not found"]);
             }
         } catch (Exception $e) {
             return json_encode(["status" => 500, "message" => $e->getMessage()]);
