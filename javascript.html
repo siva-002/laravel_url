@@ -11,7 +11,7 @@
     <button onclick="getCookieValue('XSRF-TOKEN')">POST DATA</button>
     <!-- <button onclick="postdata()">POST DATA CALL</button> -->
     <script>
-        const link = "http://localhost:8000/";
+        const link = "https://be8b-2401-4900-1ce3-c6fc-59a-4e6-2df0-29fb.ngrok-free.app/";
 
         // Step 1: Fetch CSRF token from the server
         const getcsrf = async () => {
@@ -36,9 +36,9 @@
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-XSRF-TOKEN':getCookie("X-XSRF-TOKEN")
+                    'X-XSRF-TOKEN':getCookie("XSRF-TOKEN")
                         },
-                // credentials: 'include',
+                credentials: 'include',
             
                 body: JSON.stringify({ "_token": token}) // Send CSRF token in the body
             })
@@ -58,7 +58,6 @@
 
                 for (let i = 0; i < cookieArr.length; i++) {
                     let cookie = cookieArr[i].trim();
-
                     // Check if the cookie name matches the desired name
                     if (cookie.startsWith(name + "=")) {
                         return cookie.substring(name.length + 1);

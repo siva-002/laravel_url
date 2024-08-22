@@ -9,4 +9,4 @@ Route::get('/getcsrf', [UrlShortenerController::class, 'getCsrf']);
 Route::post("/addUrl", [UrlShortenerController::class, 'storeUrl']);
 
 Route::get("/{url}", [UrlShortenerController::class, 'redirectUrl']);
-Route::get("/deleteUrl", [UrlShortenerController::class, 'deleteUrl']);
+Route::post("/deleteUrl", [UrlShortenerController::class, 'deleteUrl']);

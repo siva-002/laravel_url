@@ -17,25 +17,26 @@ class UrlShortenerController extends Controller
         return json_encode(["status" => 200, "messsage" => "backend working"]);
     }
 
-    public function getCsrf(){
-    return response()->json(['csrfToken' => csrf_token()]);
+    public function getCsrf()
+    {
+        return response()->json(['csrfToken' => csrf_token()]);
     }
 
     public function storeUrl(Request $request)
     {
         // $urllink = "https://Facebook";
         // $user_id = 122332;
-        // if (filter_var($request->urllink, FILTER_VALIDATE_URL)) {
-        //     try {
-        //         $shorturl = Str::random(5);
-        //         $data = ["actualurl" => $request->urllink, "shortenedurl" => $shorturl, "user_id" => $request->user_id];
-        //         url::create($data);
-        //         return json_encode(["status" => 5200, "message" => "Link Generated", "link" => $request->shorturl]);
-        //     } catch (Exception $e) {
-        //         return json_encode(["status" => 500, "message" => $e->getMessage()]);
-        //     }
-        // }
-        return json_encode(["status" => 200, "message" => "Valid Url"]);
+        if (filter_var($request->url_value, FILTER_VALIDATE_URL)) {
+            try {
+                $shorturl = Str::random(5);
+                $data = ["actualurl" => $request->url_value, "shortenedurl" => $shorturl, "user_id" => $request->user_id];
+                url::create($data);
+                return json_encode(["status" => 200, "message" => "Link Generated", "link" => $shorturl]);
+            } catch (Exception $e) {
+                return json_encode(["status" => 500, "message" => $e->getMessage()]);
+            }
+        }
+        return json_encode(["status" => 200, "message" => "Not a Valid Url", "data" => $request->url_value]);
     }
 
     public function redirectUrl($url)
@@ -56,7 +57,7 @@ class UrlShortenerController extends Controller
     public function deleteUrl(Request $request)
     {
         try {
-            $findUrl = url::where('shortenedurl', $request->url)->first();
+            $findUrl = url::where('shortenedurl', $request->url_value)->first();
             if ($findUrl) {
                 $findUrl->delete();
                 return json_encode(["status" => 200, "message" => "Url removed"]);
