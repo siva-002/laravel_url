@@ -11,7 +11,7 @@
     <button onclick="getCookieValue('XSRF-TOKEN')">POST DATA</button>
     <!-- <button onclick="postdata()">POST DATA CALL</button> -->
     <script>
-        const link = "https://da10-2401-4900-1ce3-c6fc-83b-96-c684-efed.ngrok-free.app/";
+        const link = "http://localhost:8000/";
 
         // Step 1: Fetch CSRF token from the server
         const getcsrf = async () => {
@@ -20,6 +20,7 @@
                 headers: {
                     'ngrok-skip-browser-warning': 'any value',
                 },
+                credentials:"include"
             })
                 .then((res) => res.json())
                 .then((res) => {
@@ -31,13 +32,11 @@
 
         // Step 2: Send POST request with CSRF token
         const postdata = async (token) => {
-            // console.log(token)
-            // console.log(JSON.stringify({ _token: token }))
             await fetch(`${link}addUrl`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'ngrok-skip-browser-warning': 'any value',
+                    'X-XSRF-TOKEN':getCookie("X-XSRF-TOKEN")
                         },
                 // credentials: 'include',
             
@@ -48,22 +47,27 @@
                     console.log(res);
                 })
                 .catch((err) => console.log(err));
-        };
+        };     // console.log(token)
+            // console.log(JSON.stringify({ _token: token }))
+       
 
 
         // Function to get the value of a specific cookie by name
-            const getCookieValue = (name) => {
-                // document.cookie = "SameSite=None; Secure";
-                const cookies = document.cookie;
-                console.log(cookies)
-                // for (let cookie of cookies) {
-                //     const [key, value] = cookie.trim().split('=');
-                //     if (key === name) {
-                //         return decodeURIComponent(value); // Decode the cookie value
-                //     }
-                // }
-                // return null; // Return null if the cookie isn't found
-            };
+          function getCookie(name) {
+                const cookieArr = document.cookie.split(";");
+
+                for (let i = 0; i < cookieArr.length; i++) {
+                    let cookie = cookieArr[i].trim();
+
+                    // Check if the cookie name matches the desired name
+                    if (cookie.startsWith(name + "=")) {
+                        return cookie.substring(name.length + 1);
+                    }
+                }
+
+                return null; // If the cookie is not found
+            }
+
 
             // Example usage:
            // Logs the value of the XSRF-TOKEN cookie (if set)
