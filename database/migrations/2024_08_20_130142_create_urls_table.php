@@ -14,8 +14,14 @@ return new class extends Migration {
             $table->id();
             $table->string("actualurl");
             $table->string("shortenedurl")->unique();
-            $table->string("user_id");
+            $table->unsignedBigInteger("user_id");
+            // $table->foreignId("user_id")->constrained()->onDelete('cascade');
+
+            // Add the foreign key constraint pointing to user_id in users table
             $table->timestamps();
+            $table->foreign('user_id')->references('user_id')->on('users')->onDelete('cascade');
+
+            // $table->foreignId("user_id")->references('user_id')->on('users')->onDelete('cascade');
         });
     }
 

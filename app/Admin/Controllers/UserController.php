@@ -24,15 +24,21 @@ class UserController extends AdminController
      */
     protected function grid()
     {
-        $grid = new Grid(new User());
-
+        $user = new User();
+        $grid = new Grid($user);
         $grid->column('id', __('Id'));
         $grid->column('name', __('Name'));
         $grid->column('user_id', __('User id'));
         $grid->column('email', __('Email'));
+        $grid->column('generated_urls', __('Generated Urls'))->display(function () {
+            return $this->generatedUrlCount();
+        });
         // $grid->column('password', __('Password'));
-        $grid->column('created_at', __('Created at'));
-        $grid->column('updated_at', __('Updated at'));
+        $grid->column('created_at', __('Created at'))->display(function () {
+            return $this->created_at->format('Y-m-d H:i:s');
+        });
+        $grid->column('user_status', __('User Status'));
+        // $grid->column('updated_at', __('Updated at'));
 
         return $grid;
     }
@@ -71,6 +77,8 @@ class UserController extends AdminController
         $form->text('user_id', __('User id'));
         $form->text('email', __('Email'));
         $form->text('password', __('Password'));
+        $form->text('user_status', __('User Status'));
+
         return $form;
     }
 }

@@ -24,6 +24,16 @@ class User extends Authenticatable
         'user_id'
     ];
 
+
+    public function url()
+    {
+        return $this->hasMany(Url::class);
+    }
+
+    public function generatedUrlCount()
+    {
+        return $this->url->count();
+    }
     /**
      * The attributes that should be hidden for serialization.
      *
