@@ -71,7 +71,6 @@ class UserController extends AdminController
         $form->text('user_id', __('User id'));
         $form->text('email', __('Email'));
         $form->text('password', __('Password'));
-
         return $form;
     }
 }
