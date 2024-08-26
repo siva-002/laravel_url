@@ -11,7 +11,8 @@ use App\Models\url;
 class UrlShortenerController extends Controller
 {
     //
-    public $frontendUrl="https://587f-2401-4900-1ce3-c6fc-1405-ac74-eb9a-5aec.ngrok-free.app/";
+    protected $frontendUrl = "https://a256-2401-4900-1ce3-c6fc-132-8aca-9042-f06f.ngrok-free.app/";
+    protected $guestUserLimit = 5;
 
     public function index()
     {
@@ -19,26 +20,30 @@ class UrlShortenerController extends Controller
         // return json_encode(["status" => 200, "messsage" => "backend working"]);
     }
 
+
     public function getCsrf()
     {
         return response()->json(['csrfToken' => csrf_token()]);
     }
-
     public function storeUrl(Request $request)
     {
-        // $urllink = "https://Facebook";
-        // $user_id = 122332;
         if (filter_var($request->url_value, FILTER_VALIDATE_URL)) {
             try {
+                $GeneratedCount = url::where('user_id', $request->user_id)->count();
+                if (Auth()->guest()) {
+                    if ($GeneratedCount >= $this->guestUserLimit) {
+                        return response()->json(["status" => 202, "message" => "Guest Quoto exceeded,Please Login to continue"], 202);
+                    }
+                }
                 $shorturl = Str::random(5);
                 $data = ["actualurl" => $request->url_value, "shortenedurl" => $shorturl, "user_id" => $request->user_id];
                 url::create($data);
-                return json_encode(["status" => 200, "message" => "Link Generated", "link" => $shorturl]);
+                return response()->json(["status" => 200, "message" => "Link Generated", "link" => $shorturl], 200);
             } catch (Exception $e) {
-                return json_encode(["status" => 500, "message" => $e->getMessage()]);
+                return response()->json(["status" => 500, "message" => $e->getMessage()], 500);
             }
         }
-        return json_encode(["status" => 400, "message" => "Not a Valid Url"]);
+        return response()->json(["status" => 400, "message" => "Not a Valid Url"], 400);
     }
 
     public function redirectUrl($url)
@@ -50,9 +55,8 @@ class UrlShortenerController extends Controller
             } else {
                 return view("notfound");
             }
-
         } catch (Exception $e) {
-            return json_encode(["status" => 500, "message" => $e->getMessage()]);
+            return response()->json(["status" => 500, "message" => $e->getMessage()], 500);
         }
     }
 
@@ -62,12 +66,24 @@ class UrlShortenerController extends Controller
             $findUrl = url::where('shortenedurl', $request->url_value)->first();
             if ($findUrl) {
                 $findUrl->delete();
-                return json_encode(["status" => 200, "message" => "Url removed"]);
+                return response()->json(["status" => 200, "message" => "Url removed"], 200);
             } else {
-                return json_encode(["status" => 400, "message" => "Url Not found"]);
+                return response()->json(["status" => 400, "message" => "Url Not found"], 400);
             }
         } catch (Exception $e) {
-            return json_encode(["status" => 500, "message" => $e->getMessage()]);
+            return response()->json(["status" => 500, "message" => $e->getMessage()], 500);
+        }
+    }
+
+    // for getting user generated urls from db
+    public function getUrlData(Request $request)
+    {
+        try {
+            $finddata = url::where('user_id', $request->user_id)->get();
+            return response()->json(["status" => 200, "data" => $finddata], 200);
+
+        } catch (Exception $e) {
+            return response()->json(["status" => 500, "message" => $e->getMessage()], 500);
         }
     }
 }
