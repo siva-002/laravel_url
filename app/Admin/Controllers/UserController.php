@@ -3,6 +3,7 @@
 namespace App\Admin\Controllers;
 
 use App\Models\User;
+use App\Models\Userid;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
@@ -24,6 +25,28 @@ class UserController extends AdminController
      */
     protected function grid()
     {
+        // $user = new Userid();
+        // $grid = new Grid($user);
+        // $grid->column('id', __('Id'));
+        // $grid->column('name', __('Name'))->display(function () {
+        //     return $this->getName();
+        // });
+        // $grid->column('user_id', __('User id'));
+        // $grid->column('email', __('Email'))->display(function () {
+        //     return $this->getEmail();
+        // });
+        // $grid->column('generated_urls', __('Generated Urls'))->display(function () {
+        //     return $this->generatedUrlCount();
+        // });
+        // // $grid->column('password', __('Password'));
+        // $grid->column('created_at', __('Created at'))->display(function () {
+        //     return $this->getCreatedDate();
+        // });
+        // // $grid->column('updated_at', __('Updated at'));
+        // $grid->column('user_status', __('User Status'))->display(function () {
+        //     return $this->getStatus();
+        //     // return $this->user->user_id;
+        // });
         $user = new User();
         $grid = new Grid($user);
         $grid->column('id', __('Id'));
@@ -35,10 +58,13 @@ class UserController extends AdminController
         });
         // $grid->column('password', __('Password'));
         $grid->column('created_at', __('Created at'))->display(function () {
-            return $this->created_at->format('Y-m-d H:i:s');
+            return $this->getCreatedDate();
         });
-        $grid->column('user_status', __('User Status'));
         // $grid->column('updated_at', __('Updated at'));
+        $grid->column('user_status', __('User Status'))->display(function () {
+            return $this->getStatus();
+            // return $this->user->user_id;
+        });
 
         return $grid;
     }

@@ -15,5 +15,6 @@ Route::group([
     $router->resource('users', UserController::class);
     $router->resource('status', StatusController::class);
     $router->resource('urls', UrlController::class);
+    $router->resource('userids', UserIdController::class);
 
 });

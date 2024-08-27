@@ -2,20 +2,20 @@
 
 namespace App\Admin\Controllers;
 
-use App\Models\Url;
+use App\Models\Userid;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
 
-class UrlController extends AdminController
+class UserIdController extends AdminController
 {
     /**
      * Title for current resource.
      *
      * @var string
      */
-    protected $title = 'Url';
+    protected $title = 'Userid';
 
     /**
      * Make a grid builder.
@@ -24,12 +24,11 @@ class UrlController extends AdminController
      */
     protected function grid()
     {
-        $grid = new Grid(new Url());
+        $grid = new Grid(new Userid());
 
         $grid->column('id', __('Id'));
-        $grid->column('actualurl', __('Actualurl'));
-        $grid->column('shortenedurl', __('Shortenedurl'));
         $grid->column('user_id', __('User id'));
+        $grid->column('user_status', __('User status'));
         $grid->column('created_at', __('Created at'));
         // $grid->column('updated_at', __('Updated at'));
 
@@ -44,12 +43,11 @@ class UrlController extends AdminController
      */
     protected function detail($id)
     {
-        $show = new Show(Url::findOrFail($id));
+        $show = new Show(Userid::findOrFail($id));
 
         $show->field('id', __('Id'));
-        $show->field('actualurl', __('Actualurl'));
-        $show->field('shortenedurl', __('Shortenedurl'));
         $show->field('user_id', __('User id'));
+        $show->field('user_status', __('User status'));
         $show->field('created_at', __('Created at'));
         $show->field('updated_at', __('Updated at'));
 
@@ -63,11 +61,10 @@ class UrlController extends AdminController
      */
     protected function form()
     {
-        $form = new Form(new Url());
+        $form = new Form(new Userid());
 
-        $form->text('actualurl', __('Actualurl'));
-        $form->text('shortenedurl', __('Shortenedurl'));
         $form->text('user_id', __('User id'));
+        $form->text('user_status', __('User status'));
 
         return $form;
     }

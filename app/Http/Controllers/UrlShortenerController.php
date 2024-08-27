@@ -12,7 +12,7 @@ class UrlShortenerController extends Controller
 {
     //
     protected $frontendUrl = "https://a256-2401-4900-1ce3-c6fc-132-8aca-9042-f06f.ngrok-free.app/";
-    protected $guestUserLimit = 5;
+    protected $guestUserLimit;
 
     public function index()
     {
@@ -25,6 +25,7 @@ class UrlShortenerController extends Controller
     {
         return response()->json(['csrfToken' => csrf_token()]);
     }
+
     public function storeUrl(Request $request)
     {
         if (filter_var($request->url_value, FILTER_VALIDATE_URL)) {

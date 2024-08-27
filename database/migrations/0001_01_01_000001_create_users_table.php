@@ -17,10 +17,12 @@ return new class extends Migration {
             $table->string('email')->unique();
             // $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->unsignedBigInteger('user_status')->default(1);
+            // $table->unsignedBigInteger('user_status')->default(1);
+
             // $table->rememberToken();
             $table->timestamps();
-            $table->foreign('user_status')->references('id')->on('status');
+            // $table->foreign('user_status')->references('id')->on('status');
+            $table->foreign('user_id')->references('user_id')->on('userids');
 
         });
 
