@@ -2,20 +2,20 @@
 
 namespace App\Admin\Controllers;
 
-use App\Models\Userid;
+use App\Models\Stripeinfo;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
 
-class UserIdController extends AdminController
+class StripeinfoController extends AdminController
 {
     /**
      * Title for current resource.
      *
      * @var string
      */
-    protected $title = 'Userid';
+    protected $title = 'Stripeinfo';
 
     /**
      * Make a grid builder.
@@ -24,15 +24,12 @@ class UserIdController extends AdminController
      */
     protected function grid()
     {
-        $grid = new Grid(new Userid());
+        $grid = new Grid(new Stripeinfo());
 
         $grid->column('id', __('Id'));
-        $grid->column('user_id', __('User id'));
-        $grid->column('user_status', __('User status'));
-        $grid->column('created_at', __('Created at'))->display(function () {
-            return $this->created_at->format('Y-m-d H:i:s');
-        });
-        // $grid->column('updated_at', __('Updated at'));
+        $grid->column('stripe_key', __('Stripe key'));
+        $grid->column('created_at', __('Created at'));
+        $grid->column('updated_at', __('Updated at'));
 
         return $grid;
     }
@@ -45,11 +42,10 @@ class UserIdController extends AdminController
      */
     protected function detail($id)
     {
-        $show = new Show(Userid::findOrFail($id));
+        $show = new Show(Stripeinfo::findOrFail($id));
 
         $show->field('id', __('Id'));
-        $show->field('user_id', __('User id'));
-        $show->field('user_status', __('User status'));
+        $show->field('stripe_key', __('Stripe key'));
         $show->field('created_at', __('Created at'));
         $show->field('updated_at', __('Updated at'));
 
@@ -63,10 +59,9 @@ class UserIdController extends AdminController
      */
     protected function form()
     {
-        $form = new Form(new Userid());
+        $form = new Form(new Stripeinfo());
 
-        $form->text('user_id', __('User id'));
-        $form->text('user_status', __('User status'));
+        $form->text('stripe_key', __('Stripe key'));
 
         return $form;
     }

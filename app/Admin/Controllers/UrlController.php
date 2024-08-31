@@ -30,7 +30,9 @@ class UrlController extends AdminController
         $grid->column('actualurl', __('Actualurl'));
         $grid->column('shortenedurl', __('Shortenedurl'));
         $grid->column('user_id', __('User id'));
-        $grid->column('created_at', __('Created at'));
+        $grid->column('created_at', __('Created at'))->display(function () {
+            return $this->created_at->format("Y-m-d H:i:s");
+        });
         // $grid->column('updated_at', __('Updated at'));
 
         return $grid;

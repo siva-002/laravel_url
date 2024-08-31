@@ -1,8 +1,11 @@
 <?php
-
+use App\Http\Controllers\DashBoardController;
 use App\Http\Controllers\UrlShortenerController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\StripeController;
 use Illuminate\Support\Facades\Route;
+
+use Encore\Admin\Facades\Admin;
 
 
 // for intial request to get token 
@@ -24,4 +27,13 @@ Route::post("/user/login", [UserController::class, "loginUser"]);
 Route::post("/user/getUrlData", [UrlShortenerController::class, 'getUrlData']);
 Route::middleware(['Authmiddleware'])->group(function () {
     Route::post("/user/logout", [UserController::class, "logoutUser"]);
+    Route::post('/payment/stripe', [StripeController::class, 'stripe'])->name('stripe');
+    Route::get('/payment/success', [StripeController::class, 'success'])->name('success');
+    Route::get('/payment/cancel', [StripeController::class, 'cancel'])->name('cancel');
 });
+
+// admin routes
+Route::middleware(['admin'])->group(function () {
+    Route::get('admin/dashboard', [DashboardController::class, "index"]);
+});
+

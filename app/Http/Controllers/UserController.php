@@ -13,19 +13,16 @@ use App\Models\Userid;
 class UserController extends Controller
 {
     //
-
-
     public function guestUserCreate(Request $request)
     {
         try {
             $validated = $request->validate(["user_id" => "required"]);
-            $userid = Userid::where('user_id', $validated['user_id'])->get();
-            if ($userid) {
+            $userid = Userid::where('user_id', $validated['user_id'])->first();
+            if (!$userid) {
                 Userid::create($validated);
-                return response()->json(["status" => 200, "message" => "Registration Success"], 200);
-
+                return response()->json(["status" => 200, "message" => "Temp User Created Successfully"], 200);
             }
-
+            return response()->json(["status" => 200, "message" => "User Already Created"], 200);
         } catch (ValidationException $e) {
             return response()->json(["status" => 401, "message" => $e->errors()], 401);
         } catch (Exception $e) {
@@ -40,7 +37,7 @@ class UserController extends Controller
             $user = User::create($data);
             Userid::where('user_id', $validated['user_id'])->update(['user_status' => 2]);
             Auth::login($user);
-            return response()->json(["status" => 200, "message" => "Registration Success", "username" => Auth::user()->name, "userid" => Auth::user()->user_id], 200);
+            return response()->json(["status" => 200, "message" => "Registration Success", "username" => Auth::user()->name, "userid" => Auth::user()->user_id, "userstatus" => 2], 200);
         } catch (ValidationException $e) {
             return response()->json(["status" => 401, "message" => $e->errors()], 401);
         } catch (QueryException $e) {
@@ -73,15 +70,15 @@ class UserController extends Controller
             if (!Auth::attempt(["email" => $validated['email'], "password" => $validated['password']])) {
                 return response()->json(["status" => 401, "message" => "Invalid Credentials"], 401);
             }
-            return response()->json(["status" => 200, "message" => "Logged in", "username" => Auth::user()->name, "userid" => Auth::user()->user_id], 200);
+            // getting user id from table user
+            $userstatus = Userid::where('user_id', Auth::user()->user_id)->first()->user_status;
+            return response()->json(["status" => 200, "message" => "Logged in", "username" => Auth::user()->name, "userid" => Auth::user()->user_id, "userstatus" => $userstatus], 200);
         } catch (ValidationException $e) {
             return response()->json(["status" => 400, "message" => $e->errors()], 400);
         } catch (\Exception $e) {
             return response()->json(["status" => 500, "message" => $e->getMessage()], 500);
         }
     }
-
-
 
 }
 
