@@ -15,12 +15,16 @@ return new class extends Migration {
             $table->string('user_id');
             $table->string('payment_id');
             $table->string('product_name');
-            $table->string('quantity');
             $table->string('amount');
             $table->string('payer_name');
             $table->string('payer_email');
             $table->string('payment_status');
             $table->string('payment_method');
+            $table->string('subscription_id');
+            $table->string('starting_date');
+            $table->string('ending_date');
+            $table->string('invoice_id');
+            $table->string('invoice_url');
             $table->timestamps();
         });
     }

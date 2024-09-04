@@ -59,7 +59,7 @@ class StatusController extends AdminController
 
 
         $form->text('id', __('Id'));
-        $form->text('status_text', __('c'));
+        $form->text('status_text', __('Status Text'));
         $form->text('user_limit', __('User Limit'));
 
         return $form;

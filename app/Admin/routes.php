@@ -18,5 +18,7 @@ Route::group([
     $router->resource('userids', UserIdController::class);
     $router->resource('stripeinfos', StripeinfoController::class);
     $router->resource('payments', PaymentController::class);
-
+    $router->resource('subscription-models', SubscriptionController::class);
+    $router->resource('stripe-products', StripeProductController::class);
+    $router->resource('stripe-prices', StripePricesController::class);
 });

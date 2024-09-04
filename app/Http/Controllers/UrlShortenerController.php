@@ -15,11 +15,11 @@ class UrlShortenerController extends Controller
 {
     //
     // protected $frontendUrl = "https://a256-2401-4900-1ce3-c6fc-132-8aca-9042-f06f.ngrok-free.app/";
-    protected $guestUserLimit;
 
     public function index()
     {
         return redirect(env('REACT_APP_URL'));
+        // return Status::max('id');
         // return json_encode(["status" => 200, "messsage" => "backend working"]);
     }
 
@@ -38,11 +38,17 @@ class UrlShortenerController extends Controller
                 if ($duplicateCheck) {
                     return response()->json(["status" => 409, "message" => "Url Already Exists $duplicateCheck->shortenedurl"], 409);
                 }
-
+                // getting user total generated count 
                 $GeneratedCount = url::where('user_id', $request->user_id)->count();
+                // getting user status 
                 $status = Userid::where('user_id', $request->user_id)->first()->user_status;
+                // getting limit for that user status 
                 $userlimit = Status::where('id', $status)->first()->user_limit;
 
+                // getting top plan from status table
+                $topplan = Status::max('id');
+
+                //getting guest user limit
                 $guestlimit = Status::where('id', 1)->first()->user_limit;
 
                 // for not logged in users
@@ -50,12 +56,9 @@ class UrlShortenerController extends Controller
                     return response()->json(["status" => 202, "message" => "Guest Quoto exceeded,Please Login to continue"], 202);
                 }
                 // for logged in users
-                if (Auth::user() && $userlimit != "nill" && $GeneratedCount >= $userlimit) {
+                if (Auth::user() && $status != $topplan && $GeneratedCount >= $userlimit) {
                     return response()->json(["status" => 203, "message" => "Please Upgrade your plan to continue"], 203);
                 }
-                // if ($GeneratedCount >= $this->guestUserLimit) {
-                //     return response()->json(["status" => 202, "message" => "Guest Quoto exceeded,Please Login to continue"], 202);
-                // }
                 $shorturl = Str::random(5);
                 $data = ["actualurl" => $request->url_value, "shortenedurl" => $shorturl, "user_id" => $request->user_id];
                 url::create($data);

@@ -13,6 +13,7 @@ return Application::configure(basePath: dirname(__DIR__))
         //
         $middleware->alias([
             'Authmiddleware' => \App\Http\Middleware\AuthMiddleware::class,
+            'UpgradePlanMiddleware' => \App\Http\Middleware\UpgradePlanMiddleware::class
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
